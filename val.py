@@ -125,6 +125,8 @@ def run(
         plots=True,
         callbacks=Callbacks(),
         compute_loss=None,
+        draw_batches=1000,
+        max_subplots=16
 ):
     # Initialize/load model and set device
     training = model is not None
@@ -264,9 +266,9 @@ def run(
             callbacks.run('on_val_image_end', pred, predn, path, names, im[si])
 
         # Plot images
-        if plots and batch_i < 3:
-            plot_images(im, targets, paths, save_dir / f'val_batch{batch_i}_labels.jpg', names)  # labels
-            plot_images(im, output_to_target(preds), paths, save_dir / f'val_batch{batch_i}_pred.jpg', names)  # pred
+        if plots and batch_i < draw_batches:
+            plot_images(im, targets, paths, save_dir / f'val_batch{batch_i}_labels.jpg', names, max_subplots=max_subplots)  # labels
+            plot_images(im, output_to_target(preds), paths, save_dir / f'val_batch{batch_i}_pred.jpg', names, max_subplots=max_subplots)  # pred
 
         callbacks.run('on_val_batch_end', batch_i, im, targets, paths, shapes, preds)
 
@@ -351,6 +353,8 @@ def parse_opt():
     parser.add_argument('--task', default='val', help='train, val, test, speed or study')
     parser.add_argument('--device', default='', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
     parser.add_argument('--workers', type=int, default=8, help='max dataloader workers (per RANK in DDP mode)')
+    parser.add_argument('--draw-batches', type=int, default=1000, help='draw how many of the batches')
+    parser.add_argument('--max-subplots', type=int, default=64, help='maximum plots in a figure')
     parser.add_argument('--single-cls', action='store_true', help='treat as single-class dataset')
     parser.add_argument('--augment', action='store_true', help='augmented inference')
     parser.add_argument('--verbose', action='store_true', help='report mAP by class')

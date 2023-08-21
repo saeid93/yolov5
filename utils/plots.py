@@ -112,7 +112,7 @@ def output_to_target(output, max_det=300):
 
 
 @threaded
-def plot_images(images, targets, paths=None, fname='images.jpg', names=None):
+def plot_images(images, targets, paths=None, fname='images.jpg', names=None, max_subplots=16):
     # Plot image grid with labels
     if isinstance(images, torch.Tensor):
         images = images.cpu().float().numpy()
@@ -120,7 +120,7 @@ def plot_images(images, targets, paths=None, fname='images.jpg', names=None):
         targets = targets.cpu().numpy()
 
     max_size = 1920  # max image size
-    max_subplots = 16  # max image subplots, i.e. 4x4
+    max_subplots = max_subplots  # max image subplots, i.e. 4x4
     bs, _, h, w = images.shape  # batch size, _, height, width
     bs = min(bs, max_subplots)  # limit plot images
     ns = np.ceil(bs ** 0.5)  # number of subplots (square)
